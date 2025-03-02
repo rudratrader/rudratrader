@@ -136,7 +136,7 @@ const Navbar: React.FC<Props> = ({
                   {/* Fixed Checkout Section */}
                   <div className="mt-3 sm:mt-4">
                     <div className="text-base sm:text-xl font-bold">Total: ₹{totalAmount}</div>
-                    <Button size="default" className="mt-2 sm:mt-3 w-full py-1.5 sm:py-2 text-base sm:text-base" onClick={checkout}>
+                    <Button size="default" className="mt-2 sm:mt-3 w-full py-1.5 sm:py-2 text-base sm:text-base bg-yellow-400 hover:bg-yellow-300" onClick={checkout}>
                       Checkout
                     </Button>
                   </div>
