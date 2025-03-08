@@ -212,6 +212,7 @@ const getProductImages = (product: Product): string[] => {
                                         }}
                                         onError={() => handleImageError(imgUrl)}
                                         loading="lazy"
+                                        referrerPolicy="no-referrer"
                                       />
                                     ) : (
                                       <div className="flex items-center justify-center w-full h-24 text-gray-400 bg-gray-100 rounded">
@@ -360,6 +361,7 @@ const getProductImages = (product: Product): string[] => {
                                 alt={`${viewingImage.name} - Image ${index + 1}`} 
                                 className="max-w-full max-h-[80vh] object-contain mx-auto"
                                 onError={() => handleImageError(imgUrl)}
+                                referrerPolicy="no-referrer"
                               />
                             ) : (
                               <div className="flex items-center justify-center w-full h-64 text-gray-400 bg-gray-100 rounded">
