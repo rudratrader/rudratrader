@@ -1,15 +1,24 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotFound from '@/components/NotFound';
+import Home from '@/pages/Home'
+// Create a Home component that contains your existing app's content
 
+// Main App component with routing
 const App = () => {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-          <Routes>
-            <Route path="/" element={<Home/>} />
-          </Routes>
-      </div>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        {/* Home route */}
+        <Route path="/" element={<Home />} />
+        
+        {/* You can add more routes here */}
+        {/* <Route path="/about" element={<About />} /> */}
+        {/* <Route path="/contact" element={<Contact />} /> */}
+        
+        {/* 404 Not Found route - must be last */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
