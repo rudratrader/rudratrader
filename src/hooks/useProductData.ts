@@ -37,7 +37,7 @@ export const useProductData = () => {
             header: true,
             complete: (results) => {
               const parsedProducts = results.data
-                .filter((item: any) => item.id && item.name)
+                .filter((item: any) => item.id && item.name && item.status === 'a')
                 .map((item: any) => ({
                   id: String(item.id || ""),
                   name: String(item.name || ""),
