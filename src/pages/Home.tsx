@@ -77,6 +77,20 @@ const Home = () => {
     }
   });
 
+  const handleFilterChange = (newFilters: FilterState) => {
+    // Update filters
+    setFilters(newFilters);
+    
+    // Reset pagination to page 1 whenever filters change
+    setPagination(prev => ({
+      ...prev,
+      currentPage: 1
+    }));
+    
+    // Optional: scroll to top when filters change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Calculate paginated products
   const startIndex = (pagination.currentPage - 1) * pagination.itemsPerPage;
   const endIndex = startIndex + pagination.itemsPerPage;
@@ -168,7 +182,7 @@ const Home = () => {
         subCategories={subCategories}
         brands={brands}
         filters={filters}
-        onFilterChange={setFilters}
+        onFilterChange={handleFilterChange}
       />
       
       {/* Main content area */}
