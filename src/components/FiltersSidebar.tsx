@@ -156,7 +156,7 @@ const FiltersSidebar = ({
       <Accordion type="single" collapsible defaultValue="categories" className="w-full">
         {/* Shop by Category */}
         <AccordionItem value="categories">
-          <AccordionTrigger>Shop by Category</AccordionTrigger>
+          <AccordionTrigger className="text-amber-800 text-lg">SHOP BY CATEGORY</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
               <Button
@@ -188,7 +188,7 @@ const FiltersSidebar = ({
         {/* Shop by Subcategory - only show if category is selected and there are subcategories */}
         {filteredSubCategories.length > 0 && (
           <AccordionItem value="subcategories">
-            <AccordionTrigger>Shop by Subcategory</AccordionTrigger>
+            <AccordionTrigger className="text-amber-800 text-lg">SHOP BY SUBCATEGORY</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-2">
                 <Button
@@ -218,7 +218,7 @@ const FiltersSidebar = ({
 
         {/* Shop by Brand */}
         <AccordionItem value="brands">
-          <AccordionTrigger>Shop by Brand</AccordionTrigger>
+          <AccordionTrigger className="text-amber-800 text-lg">SHOP BY BRAND</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
               <Button
