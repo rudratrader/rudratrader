@@ -177,7 +177,7 @@ const FiltersSidebar = ({
                   onClick={() => handleCategoryChange(category.id)}
                 >
                   <p className="break-words overflow-wrap-break-word whitespace-normal w-full">
-                    {category.name}
+                    {category.categoryName}
                   </p>
                 </Button>
               ))}

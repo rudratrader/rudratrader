@@ -39,43 +39,43 @@ const ProductCard = ({
     currency: 'INR'
   }).format(product.price);
   
-  // Helper function to extract image URLs
-  const getProductImages = (product: EnhancedProduct): string[] => {
-    if (!product.image) return [];
+  // // Helper function to extract image URLs
+  // const getProductImages = (product: EnhancedProduct): string[] => {
+  //   if (!product.images) return [];
+  //   console.log(product.images)
+  //   // Handle case where images is already an array
+  //   if (Array.isArray(product.images)) return product.images;
     
-    // Handle case where image is already an array
-    if (Array.isArray(product.image)) return product.image;
-    
-    try {
-      // Try to parse as JSON array
-      const parsedImages = JSON.parse(product.image);
+  //   try {
+  //     // Try to parse as JSON array
+  //     const parsedImages = JSON.parse(product.image);
       
-      if (Array.isArray(parsedImages)) {
-        // Handle case where array elements might be comma-separated URLs
-        return parsedImages.flatMap(item => {
-          if (typeof item === 'string' && item.includes(',')) {
-            return item.split(',').map(url => url.trim());
-          }
-          return item;
-        });
-      } else if (typeof parsedImages === 'string' && parsedImages.includes(',')) {
-        // Handle case where parsed result is a comma-separated string
-        return parsedImages.split(',').map(url => url.trim());
-      } else {
-        // Use parsed result as a single item
-        return [parsedImages];
-      }
-    } catch (e) {
-      // If parsing fails, check if the string contains commas
-      if (typeof product.image === 'string' && product.image.includes(',')) {
-        return product.image.split(',').map(url => url.trim());
-      }
-      // Default: use as single URL
-      return [product.image];
-    }
-  };
+  //     if (Array.isArray(parsedImages)) {
+  //       // Handle case where array elements might be comma-separated URLs
+  //       return parsedImages.flatMap(item => {
+  //         if (typeof item === 'string' && item.includes(',')) {
+  //           return item.split(',').map(url => url.trim());
+  //         }
+  //         return item;
+  //       });
+  //     } else if (typeof parsedImages === 'string' && parsedImages.includes(',')) {
+  //       // Handle case where parsed result is a comma-separated string
+  //       return parsedImages.split(',').map(url => url.trim());
+  //     } else {
+  //       // Use parsed result as a single item
+  //       return [parsedImages];
+  //     }
+  //   } catch (e) {
+  //     // If parsing fails, check if the string contains commas
+  //     if (typeof product.image === 'string' && product.image.includes(',')) {
+  //       return product.image.split(',').map(url => url.trim());
+  //     }
+  //     // Default: use as single URL
+  //     return [product.image];
+  //   }
+  // };
 
-  const imageUrls = getProductImages(product);
+  const imageUrls = product.images;
   
   // Handle click on Add to Cart button without opening dialog
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -135,20 +135,20 @@ const ProductCard = ({
         {/* Product image */}
         <AspectRatio ratio={1/1} className="bg-muted relative">
           <img 
-            src={imageUrls[0] || '/placeholder-image.jpg'} 
+            src={imageUrls[0].url || '/placeholder-image.jpg'} 
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain bg-[#f5ece0]"
             loading="lazy"
           />
-        <Button 
-          onClick={handleAddToCart} 
-          size="icon"
-          variant="default"
-          className="absolute bottom-1 right-1 h-8 w-8 rounded-full shadow-md flex items-center justify-center bg-[#624d15] hover:bg-amber-800 border-yellow-300 border"
-          aria-label={`Add ${product.name} to cart`}
-        >
-          <ShoppingCart className="h-6 w-6" />
-        </Button>
+          <Button 
+            onClick={handleAddToCart} 
+            size="icon"
+            variant="default"
+            className="absolute bottom-1 right-1 h-8 w-8 rounded-full shadow-md flex items-center justify-center bg-[#624d15] hover:bg-amber-800 border-yellow-300 border"
+            aria-label={`Add ${product.name} to cart`}
+          >
+            <ShoppingCart className="h-6 w-6" />
+          </Button>
         </AspectRatio>
         
         {/* Product info with improved responsive text handling */}
@@ -190,13 +190,13 @@ const ProductCard = ({
                   setApi={setCarouselApi}
                 >
                   <CarouselContent>
-                    {imageUrls.map((url, index) => (
+                    {imageUrls.map((obj, index) => (
                       <CarouselItem key={index}>
                         <AspectRatio ratio={1/1} className="bg-muted rounded-md">
                           <img
-                            src={url}
+                            src={obj.url}
                             alt={`${product.name} ${index + 1}`}
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-contain bg-[#f5ece0]"
                           />
                         </AspectRatio>
                       </CarouselItem>
@@ -213,7 +213,7 @@ const ProductCard = ({
                 {/* Thumbnail images with responsive sizing */}
                 {imageUrls.length > 1 && (
                   <div className="flex flex-wrap mt-2 gap-1 sm:gap-2 pb-1 justify-center sm:justify-start overflow-x-auto">
-                    {imageUrls.map((url, index) => (
+                    {imageUrls.map((obj, index) => (
                       <button
                         key={index}
                         onClick={() => handleThumbnailClick(index)}
@@ -225,7 +225,7 @@ const ProductCard = ({
                         aria-selected={activeImageIndex === index}
                       >
                         <img
-                          src={url}
+                          src={obj.url}
                           alt={`${product.name} thumbnail ${index + 1}`}
                           className="object-cover w-full h-full"
                         />

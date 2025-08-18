@@ -62,16 +62,9 @@ const CartDrawer = ({
                   <div key={item.product.id} className="flex gap-3 border-b pb-3">
                     <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                       <img 
-                        src={(() => {
-                          try {
-                            const images = JSON.parse(item.product.image);
-                            return Array.isArray(images) ? images[0] : images;
-                          } catch {
-                            return item.product.image;
-                          }
-                        })()} 
+                        src={item.product.images[0].url} 
                         alt={item.product.name} 
-                        className="object-contain w-full h-full" 
+                        className="object-contain w-full h-full bg-[#f5ece0]" 
                       />
                     </div>
                     

@@ -5,6 +5,7 @@ import ProductGrid from '@/components/ProductGrid';
 import PaginationControls from '@/components/PaginationControls';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorDisplay from '@/components/ErrorDisplay';
+import Footer from '@/components/Footer';
 import { Toaster, toast } from 'sonner';
 import { EnhancedProduct, FilterState, PaginationState } from '@/config/types';
 
@@ -163,7 +164,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FAF7F3]">
       {/* Toast notifications */}
       <Toaster />
       
@@ -186,9 +187,10 @@ const Home = () => {
       />
       
       {/* Main content area */}
-      <main className="container mt-20 mx-auto px-4 py-8">
+<main className="container mt-20 sm:mt-20 md:mt-12 lg:mt-12 mx-auto px-4 pt-8">
+
         {/* Products grid */}
-        <div className="flex-1">
+        <div className="flex-1 ">
           <ProductGrid 
             products={paginatedProducts}
             onAddToCart={addToCart}
@@ -196,7 +198,7 @@ const Home = () => {
           
           {/* Pagination controls */}
           {totalPages > 1 && (
-            <div className="mt-8">
+            <div className="mt-4">
               <PaginationControls
                 currentPage={pagination.currentPage}
                 totalPages={totalPages}
@@ -206,6 +208,8 @@ const Home = () => {
           )}
         </div>
       </main>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

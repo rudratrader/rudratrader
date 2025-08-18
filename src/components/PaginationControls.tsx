@@ -52,7 +52,7 @@ const PaginationControls = ({
   const pageNumbers = generatePageNumbers();
   
   return (
-    <nav aria-label="Pagination" className="flex justify-center mt-6">
+    <nav aria-label="Pagination" className="flex justify-center">
       <ul className="flex items-center space-x-1">
         {/* Previous button */}
         <li>

@@ -85,7 +85,7 @@ const Navbar = ({
   return (
     <>
       {/* Fixed navbar */}
-      <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 bg-[#fbf9f5] shadow-sm z-50">
         {/* Top bar with company name */}
         <div className="container mx-auto px-4 lg:pb-3 pt-3 flex justify-between items-center">
           {/* Company name - centered on mobile, left-aligned on desktop */}
@@ -103,7 +103,7 @@ const Navbar = ({
           </div>
                     
           {/* Desktop search and filters */}
-          <div className="hidden md:flex items-center flex-1 justify-center gap-2">
+          <div className="hidden md:flex items-center flex-1 justify-center gap-2 ">
             <div className="relative w-full max-w-md">
               <Input
                 type="text"
@@ -120,7 +120,7 @@ const Navbar = ({
               variant="outline" 
               size="sm" 
               onClick={() => setIsFilterOpen(true)}
-              className="relative whitespace-nowrap"
+              className="relative whitespace-nowrap bg-[#fbf9f5]"
             >
               <Filter className="h-4 w-4 mr-1" />
               Filters
@@ -133,8 +133,8 @@ const Navbar = ({
           </div>
           
           {/* Desktop cart button */}
-          <div className="hidden flex-1 md:flex justify-end">
-            <Button variant="outline" size="sm" onClick={onCartToggle} className="relative">
+          <div className="hidden flex-1 md:flex justify-end ">
+            <Button variant="outline" size="sm" onClick={onCartToggle} className="relative bg-[#fbf9f5]">
               <ShoppingCart className="h-5 w-5" />
               {cartItemsCount > 0 && (
                 <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center">
@@ -146,13 +146,13 @@ const Navbar = ({
         </div>
         
         {/* Mobile bottom bar with filters, search, cart */}
-        <div className="md:hidden container mx-auto px-4 flex justify-between items-center">
+        <div className="md:hidden container mx-auto px-4 flex justify-between items-center bg-[#fbf9f5]">
           {/* Filters button */}
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => setIsFilterOpen(true)}
-            className="flex flex-col items-center text-xs px-2 relative"
+            className="flex flex-col items-center text-xs px-2 relative bg-[#fbf9f5]"
           >
             <Filter className="h-5 w-5 mb-1" />
             <span>Filters</span>

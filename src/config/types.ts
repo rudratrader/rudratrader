@@ -2,8 +2,12 @@
  * Core data types for the e-commerce application
  */
 
-// Product type based on Google Sheets data structure
-export interface Product {
+export interface ProductImage {
+  url: string;
+  public_id?: string;
+}
+
+export interface EnhancedProduct {
   id: string;
   name: string;
   price: number;
@@ -13,24 +17,22 @@ export interface Product {
   subCategoryId: string;
   quantity: string;
   description: string;
-  createdAt?: string;
-  updatedAt?: string;
+  brandName: string;
+  categoryName: string;
+  subCategoryName: string;
+  images: ProductImage[]; // Parsed image URLs as array
 }
 
 // Brand type based on Google Sheets data structure
 export interface Brand {
   id: string;
   brandName: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 // Category type based on Google Sheets data structure
 export interface Category {
   id: string;
-  name: string;
-  createdAt?: string;
-  updatedAt?: string;
+  categoryName: string;
 }
 
 // SubCategory type based on Google Sheets data structure
@@ -42,13 +44,6 @@ export interface SubCategory {
   updatedAt?: string;
 }
 
-// Enhanced product with related entity data
-export interface EnhancedProduct extends Product {
-  brandName: string;
-  categoryName: string;
-  subCategoryName: string;
-  imageArray: string[]; // Parsed image URLs as array
-}
 
 // Cart item with quantity
 export interface CartItem {
