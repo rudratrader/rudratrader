@@ -24,6 +24,7 @@ export const useProductData = () => {
           const enhancedProducts: EnhancedProduct[] = data.products
             .filter((product: any) => product.name)
             .map((product: any) => ({
+              id: product._id,
               name: product.name,
               price: product.price || 0,
               images: product.images || [],
