@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useProductData } from '@/hooks/useProductData';
 import Navbar from '@/components/Navbar';
 import ProductGrid from '@/components/ProductGrid';
@@ -8,6 +8,8 @@ import ErrorDisplay from '@/components/ErrorDisplay';
 import Footer from '@/components/Footer';
 import { Toaster, toast } from 'sonner';
 import { EnhancedProduct, FilterState, PaginationState } from '@/config/types';
+
+const CART_STORAGE_KEY = 'cartItems';
 
 const Home = () => {
   // Fetch product data using our hook
@@ -30,8 +32,28 @@ const Home = () => {
   });
   
   // Cart state
-  const [cartItems, setCartItems] = useState<{product: EnhancedProduct, quantity: number}[]>([]);
+  const [cartItems, setCartItems] = useState<{product: EnhancedProduct, quantity: number}[]>(() => {
+    try {
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
   
+  // sets the cartItem 
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+      }
+    } catch (e) {
+      console.error('Failed to save cart items to localStorage', e);
+    }
+  }, [cartItems]);
+
   // UI states
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -133,6 +155,13 @@ const Home = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Clears the cart and local storage
+  const handleClearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cartItems");
+  };
+
+
   // Remove item from cart
   const removeFromCart = (productId: string) => {
     setCartItems(prev => prev.filter(item => item.product.id !== productId));
@@ -178,6 +207,7 @@ const Home = () => {
         cartItems={cartItems}
         onRemoveFromCart={removeFromCart}
         onUpdateQuantity={updateQuantity}
+        handleClearCart={handleClearCart}
         // Filter props
         categories={categories}
         subCategories={subCategories}

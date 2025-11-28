@@ -22,6 +22,7 @@ interface NavbarProps {
   onCartToggle: () => void;
   onRemoveFromCart: (productId: string) => void;
   onUpdateQuantity: (productId: string, quantity: number) => void;
+  handleClearCart: () => void;
   // Filter related props
   categories: Category[];
   subCategories: SubCategory[];
@@ -39,6 +40,7 @@ const Navbar = ({
   onCartToggle,
   onRemoveFromCart,
   onUpdateQuantity,
+  handleClearCart,
   // Filter related props
   categories,
   subCategories,
@@ -221,6 +223,7 @@ const Navbar = ({
         onRemoveFromCart={onRemoveFromCart}
         onUpdateQuantity={onUpdateQuantity}
         handleCheckout={handleCheckout}
+        handleClearCart={handleClearCart}
       />
     </>
   );

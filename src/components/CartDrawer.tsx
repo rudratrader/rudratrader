@@ -16,6 +16,7 @@ interface CartDrawerProps {
   onRemoveFromCart: (productId: string) => void;
   onUpdateQuantity: (productId: string, quantity: number) => void;
   handleCheckout: () => void;
+  handleClearCart: () => void;
 }
 
 const CartDrawer = ({
@@ -26,6 +27,7 @@ const CartDrawer = ({
   onRemoveFromCart,
   onUpdateQuantity,
   handleCheckout,
+  handleClearCart
 }: CartDrawerProps) => {
   
   // Calculate cart total
@@ -115,17 +117,25 @@ const CartDrawer = ({
                 ))}
               </div>
             </div>
-            
+            {/* Added Clear Cart */}
             <SheetFooter className="border-t pt-4">
               <div className="w-full space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Total:</span>
                   <span className="font-bold text-lg">{formattedTotal}</span>
                 </div>
-                <Button className="w-full bg-[#624d15] hover:bg-amber-800" onClick={handleCheckout}>
-                  <span>Checkout</span>
-                  <ChevronRight className="h-4 w-4 ml-2" />
-                </Button>
+                
+                <div className="flex gap-3">
+                  <Button className="w-1/3 bg-gray-200 text-black hover:bg-gray-300" onClick={handleClearCart}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                    <span >Clear</span>
+                  </Button>
+
+                  <Button className="w-2/3 bg-[#624d15] hover:bg-amber-800" onClick={handleCheckout}>
+                    <span>Checkout</span>
+                    <ChevronRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
               </div>
             </SheetFooter>
           </>
