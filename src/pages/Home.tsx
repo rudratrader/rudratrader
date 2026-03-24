@@ -193,7 +193,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F3]">
+    <div className="min-h-screen bg-[#FAF7F3] flex flex-col">
       {/* Toast notifications */}
       <Toaster />
       
@@ -217,10 +217,10 @@ const Home = () => {
       />
       
       {/* Main content area */}
-<main className="container mt-20 sm:mt-20 md:mt-12 lg:mt-12 mx-auto px-4 pt-8">
+      <main className="container mt-20 sm:mt-20 md:mt-12 lg:mt-12 mx-auto px-4 pt-8 flex-1">
 
         {/* Products grid */}
-        <div className="flex-1 ">
+        <div className="flex flex-col">
           <ProductGrid 
             products={paginatedProducts}
             onAddToCart={addToCart}
@@ -228,7 +228,7 @@ const Home = () => {
           
           {/* Pagination controls */}
           {totalPages > 1 && (
-            <div className="mt-4">
+            <div className="mt-4 mb-4">
               <PaginationControls
                 currentPage={pagination.currentPage}
                 totalPages={totalPages}
