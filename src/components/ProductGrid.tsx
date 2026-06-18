@@ -1,24 +1,31 @@
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import ProductCard from '@/components/ProductCard';
-import {EnhancedProduct} from '@/config/types'
-
-// interface Product {
-//   id: string;
-//   name: string;
-//   category: string;
-//   price: number;
-//   image: string;
-// }
+import ProductCardSkeleton from '@/components/ProductCardSkeleton';
+import { EnhancedProduct } from '@/config/types';
 
 interface ProductGridProps {
   products: EnhancedProduct[];
   onAddToCart: (product: EnhancedProduct) => void;
+  loading?: boolean;
 }
 
-const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
+const GRID_CLASS = 'grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6';
+
+const ProductGrid = ({ products, onAddToCart, loading = false }: ProductGridProps) => {
   // Check if we're on a mobile device (screen width < 768px)
   const isMobile = useMediaQuery('(max-width: 767px)');
-  // console.log(products)
+
+  // While data is loading, show skeleton cards in the same grid layout.
+  if (loading) {
+    return (
+      <div className={GRID_CLASS}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (products.length === 0) {
     return (
       <div className="text-center py-20">
@@ -29,11 +36,11 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+    <div className={GRID_CLASS}>
       {products.map((product) => (
-        <ProductCard 
-          key={product.id} 
-          product={product} 
+        <ProductCard
+          key={product.id}
+          product={product}
           onAddToCart={() => onAddToCart(product)}
           size={isMobile ? 'small' : 'normal'}
         />

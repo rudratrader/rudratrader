@@ -14,12 +14,12 @@ export interface EnhancedProduct {
   image: string; // Comma-separated image URLs
   brandId: string;
   categoryId: string;
-  subCategoryId: string;
+  subCategoryId?: string; // vestigial: the API has no subcategories
   quantity: string;
   description: string;
   brandName: string;
   categoryName: string;
-  subCategoryName: string;
+  status: string; // "active" | "inactive" — used to hide inactive products
   images: ProductImage[]; // Parsed image URLs as array
 }
 

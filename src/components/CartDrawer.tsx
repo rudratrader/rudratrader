@@ -2,6 +2,7 @@ import { ShoppingCart, ChevronRight, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { EnhancedProduct } from "@/config/types";
+import { PLACEHOLDER_IMAGE } from "@/lib/utils";
 
 interface CartItem {
   product: EnhancedProduct;
@@ -63,10 +64,10 @@ const CartDrawer = ({
                 {cartItems.map((item) => (
                   <div key={item.product.id} className="flex gap-3 border-b pb-3">
                     <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                      <img 
-                        src={item.product.images[0].url} 
-                        alt={item.product.name} 
-                        className="object-contain w-full h-full bg-[#f5ece0]" 
+                      <img
+                        src={item.product.images?.[0]?.url || PLACEHOLDER_IMAGE}
+                        alt={item.product.name}
+                        className="object-contain w-full h-full bg-[#f5ece0]"
                       />
                     </div>
                     

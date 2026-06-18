@@ -1,91 +1,60 @@
-import { useState,useEffect } from 'react';
-import { useProductData } from '@/hooks/useProductData';
+import { useState } from 'react';
+import { useProductDataContext } from '@/context/ProductDataContext';
+import { useCart } from '@/context/CartContext';
 import Navbar from '@/components/Navbar';
 import ProductGrid from '@/components/ProductGrid';
 import PaginationControls from '@/components/PaginationControls';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorDisplay from '@/components/ErrorDisplay';
 import Footer from '@/components/Footer';
-import { Toaster, toast } from 'sonner';
-import { EnhancedProduct, FilterState, PaginationState } from '@/config/types';
-
-const CART_STORAGE_KEY = 'cartItems';
+import Seo from '@/components/Seo';
+import { SITE, WEBSITE_JSONLD, ORGANIZATION_JSONLD } from '@/config/site';
+import { FilterState, PaginationState } from '@/config/types';
 
 const Home = () => {
-  // Fetch product data using our hook
-  const { products, brands, categories, subCategories, loading, error } = useProductData();
-  
+  // Shared catalogue + cart
+  const { products, brands, categories, subCategories, loading, error } = useProductDataContext();
+  const { addToCart } = useCart();
+
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
     categoryId: null,
     subCategoryId: null,
     brandId: null,
     searchQuery: '',
-    sortBy: null
+    sortBy: null,
   });
-  
+
   // Pagination state
   const [pagination, setPagination] = useState<PaginationState>({
     currentPage: 1,
     itemsPerPage: 16,
-    totalItems: 0
+    totalItems: 0,
   });
-  
-  // Cart state
-  const [cartItems, setCartItems] = useState<{product: EnhancedProduct, quantity: number}[]>(() => {
-    try {
-      const raw = localStorage.getItem(CART_STORAGE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  });
-  
-  // sets the cartItem 
-  useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
-      }
-    } catch (e) {
-      console.error('Failed to save cart items to localStorage', e);
-    }
-  }, [cartItems]);
 
-  // UI states
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // Filter and sort products
-  const filteredProducts = products.filter(product => {
-    // Filter by search query
-    if (filters.searchQuery && !product.name.toLowerCase().includes(filters.searchQuery.toLowerCase())) {
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    if (
+      filters.searchQuery &&
+      !product.name.toLowerCase().includes(filters.searchQuery.toLowerCase())
+    ) {
       return false;
     }
-    
-    // Filter by category
     if (filters.categoryId && product.categoryId !== filters.categoryId) {
       return false;
     }
-    
-    // Filter by subcategory
     if (filters.subCategoryId && product.subCategoryId !== filters.subCategoryId) {
       return false;
     }
-    
-    // Filter by brand
     if (filters.brandId && product.brandId !== filters.brandId) {
       return false;
     }
-    
     return true;
   });
 
   // Sort products based on sort selection
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (!filters.sortBy) return 0;
-    
+
     switch (filters.sortBy) {
       case 'price-asc':
         return a.price - b.price;
@@ -101,16 +70,9 @@ const Home = () => {
   });
 
   const handleFilterChange = (newFilters: FilterState) => {
-    // Update filters
     setFilters(newFilters);
-    
     // Reset pagination to page 1 whenever filters change
-    setPagination(prev => ({
-      ...prev,
-      currentPage: 1
-    }));
-    
-    // Optional: scroll to top when filters change
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -119,125 +81,60 @@ const Home = () => {
   const endIndex = startIndex + pagination.itemsPerPage;
   const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(sortedProducts.length / pagination.itemsPerPage);
-  
-  // Handler for adding product to cart
-  const addToCart = (product: EnhancedProduct) => {
-    setCartItems(prevItems => {
-      const existingItemIndex = prevItems.findIndex(item => item.product.id === product.id);
-      
-      if (existingItemIndex >= 0) {
-        // Update quantity if product already in cart
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex] = {
-          ...updatedItems[existingItemIndex],
-          quantity: updatedItems[existingItemIndex].quantity + 1
-        };
-        return updatedItems;
-      } else {
-        // Add new product to cart
-        return [...prevItems, { product, quantity: 1 }];
-      }
-    });
-    
-    toast.success(
-      `${product.name} has been added to your cart.`,
-      {
-        description: "You can view your cart by clicking the cart icon",
-        duration: 2000,
-      }
-    );
-  };
-  
+
   // Handle page change
   const handlePageChange = (page: number) => {
-    setPagination(prev => ({ ...prev, currentPage: page }));
-    // Scroll to top when page changes
+    setPagination((prev) => ({ ...prev, currentPage: page }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Clears the cart and local storage
-  const handleClearCart = () => {
-    setCartItems([]);
-    localStorage.removeItem("cartItems");
-  };
-
-
-  // Remove item from cart
-  const removeFromCart = (productId: string) => {
-    setCartItems(prev => prev.filter(item => item.product.id !== productId));
-  };
-
-  // Update cart item quantity
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity < 1) return;
-    
-    setCartItems(prev => 
-      prev.map(item => 
-        item.product.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  // Disable filters when loading
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  // Show error if there's one
-  if (error) {
-    return <ErrorDisplay message={error} />;
-  }
-
   return (
     <div className="min-h-screen bg-[#FAF7F3] flex flex-col">
-      {/* Toast notifications */}
-      <Toaster />
-      
+      <Seo
+        title="Rudra Trader - Agarbatti, Dhoop & Incense | Hyderabad"
+        description={SITE.description}
+        path="/"
+        jsonLd={[WEBSITE_JSONLD, ORGANIZATION_JSONLD]}
+      />
+
       {/* Navigation with search, filters and cart - all integrated */}
-      <Navbar 
+      <Navbar
         searchQuery={filters.searchQuery}
-        onSearchChange={(query) => setFilters(prev => ({ ...prev, searchQuery: query }))}
-        cartItemsCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)}
-        onCartToggle={() => setIsCartOpen(!isCartOpen)}
-        isCartOpen={isCartOpen}
-        cartItems={cartItems}
-        onRemoveFromCart={removeFromCart}
-        onUpdateQuantity={updateQuantity}
-        handleClearCart={handleClearCart}
-        // Filter props
+        onSearchChange={(query) => {
+          setFilters((prev) => ({ ...prev, searchQuery: query }));
+          // Reset to the first page so results aren't hidden behind a stale page offset
+          setPagination((prev) => ({ ...prev, currentPage: 1 }));
+        }}
         categories={categories}
         subCategories={subCategories}
         brands={brands}
         filters={filters}
         onFilterChange={handleFilterChange}
       />
-      
-      {/* Main content area */}
-      <main className="container mt-20 sm:mt-20 md:mt-12 lg:mt-12 mx-auto px-4 pt-8 flex-1">
 
-        {/* Products grid */}
-        <div className="flex flex-col">
-          <ProductGrid 
-            products={paginatedProducts}
-            onAddToCart={addToCart}
-          />
-          
-          {/* Pagination controls */}
-          {totalPages > 1 && (
-            <div className="mt-4 mb-4">
-              <PaginationControls
-                currentPage={pagination.currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
-          )}
-        </div>
+      {/* Main content area */}
+      <main className="container mt-20 sm:mt-20 md:mt-12 lg:mt-12 mx-auto px-4 pt-8 pb-10 flex-1">
+        {error ? (
+          <ErrorDisplay message={error} />
+        ) : (
+          <div className="flex flex-col">
+            {/* Products grid (shows skeletons while loading) */}
+            <ProductGrid products={paginatedProducts} onAddToCart={addToCart} loading={loading} />
+
+            {/* Pagination controls */}
+            {!loading && totalPages > 1 && (
+              <div className="mt-4 mb-4">
+                <PaginationControls
+                  currentPage={pagination.currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </main>
+
       {/* Footer */}
       <Footer />
     </div>
