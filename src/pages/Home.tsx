@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigationType } from 'react-router-dom';
 import { useProductDataContext } from '@/context/ProductDataContext';
 import { useCart } from '@/context/CartContext';
 import Navbar from '@/components/Navbar';
@@ -10,26 +11,94 @@ import Seo from '@/components/Seo';
 import { SITE, WEBSITE_JSONLD, ORGANIZATION_JSONLD } from '@/config/site';
 import { FilterState, PaginationState } from '@/config/types';
 
+const HOME_VIEW_KEY = 'homeViewState';
+const HOME_SCROLL_KEY = 'homeScrollY';
+
+const DEFAULT_FILTERS: FilterState = {
+  categoryId: null,
+  subCategoryId: null,
+  brandId: null,
+  searchQuery: '',
+  sortBy: null,
+};
+
+// Restore the last home view (filters + page) so returning from a product
+// drops the user back where they were.
+const readHomeView = (): { filters: FilterState; currentPage: number } | null => {
+  try {
+    const raw = sessionStorage.getItem(HOME_VIEW_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 const Home = () => {
+  const navigationType = useNavigationType();
+
   // Shared catalogue + cart
   const { products, brands, categories, subCategories, loading, error } = useProductDataContext();
   const { addToCart } = useCart();
 
-  // Filter state
-  const [filters, setFilters] = useState<FilterState>({
-    categoryId: null,
-    subCategoryId: null,
-    brandId: null,
-    searchQuery: '',
-    sortBy: null,
-  });
-
-  // Pagination state
-  const [pagination, setPagination] = useState<PaginationState>({
-    currentPage: 1,
+  // Filter + pagination state (restored from the last home view when present)
+  const [filters, setFilters] = useState<FilterState>(() => readHomeView()?.filters ?? DEFAULT_FILTERS);
+  const [pagination, setPagination] = useState<PaginationState>(() => ({
+    currentPage: readHomeView()?.currentPage ?? 1,
     itemsPerPage: 16,
     totalItems: 0,
-  });
+  }));
+
+  // Persist the current view (filters + page) for when we come back.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        HOME_VIEW_KEY,
+        JSON.stringify({ filters, currentPage: pagination.currentPage })
+      );
+    } catch {
+      /* ignore storage errors */
+    }
+  }, [filters, pagination.currentPage]);
+
+  // Remember the scroll position at the moment a product is opened (captured on
+  // click, before the route change resets scroll — immune to navigation timing).
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('a[href^="/product/"]')) {
+        try {
+          sessionStorage.setItem(HOME_SCROLL_KEY, String(window.scrollY));
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+    document.addEventListener('click', onClick, true);
+    return () => document.removeEventListener('click', onClick, true);
+  }, []);
+
+  // On back/forward (POP), restore the saved scroll position. Retry across a few
+  // frames because the grid needs a moment to lay out (and become tall enough to
+  // scroll) after the page re-mounts.
+  const scrollRestored = useRef(false);
+  useEffect(() => {
+    if (scrollRestored.current || navigationType !== 'POP' || loading || products.length === 0) {
+      return;
+    }
+    scrollRestored.current = true;
+    const y = Number(sessionStorage.getItem(HOME_SCROLL_KEY)) || 0;
+    if (y <= 0) return;
+
+    let frames = 0;
+    const restore = () => {
+      window.scrollTo(0, y);
+      frames += 1;
+      if (Math.abs(window.scrollY - y) > 2 && frames < 30) {
+        requestAnimationFrame(restore);
+      }
+    };
+    requestAnimationFrame(restore);
+  }, [navigationType, loading, products.length]);
 
   // Filter products
   const filteredProducts = products.filter((product) => {
