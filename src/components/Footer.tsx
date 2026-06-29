@@ -16,7 +16,7 @@ const Footer = () => {
               <div className="text-sm text-[#FAF7F3]">
                 <div className="flex gap-1 ">
                   <span>&copy; {new Date().getFullYear()}</span>
-                  <span className="font-medium">RudraTrader.shop</span>
+                  <span className="font-medium">RudraTrader.in</span>
                   <span>- All rights reserved.</span>
                 </div>
               </div>
@@ -54,10 +54,10 @@ const Footer = () => {
                 <div className="flex items-center gap-3 text-[#FAF7F3]">
                   <Mail className="w-4 h-4 flex-shrink-0 text-[#FAF7F3]" />
                   <a
-                    href="mailto:contact@rudratrader.shop"
+                    href="mailto:contact@rudratrader.in"
                     className="hover:text-white transition-colors duration-200 break-words"
                   >
-                    contact@rudratrader.shop
+                    contact@rudratrader.in
                   </a>
                 </div>
               </div>
@@ -103,10 +103,10 @@ const Footer = () => {
               <div className="flex items-center gap-3 text-[#FAF7F3]">
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <a
-                  href="mailto:contact@rudratrader.shop"
+                  href="mailto:contact@rudratrader.in"
                   className="hover:text-white transition-colors duration-200 break-words"
                 >
-                  contact@rudratrader.shop
+                  contact@rudratrader.in
                 </a>
               </div>
             </div>
@@ -115,7 +115,7 @@ const Footer = () => {
           <div className="text-left text-sm text-[#FAF7F3]">
             <div className="flex flex-wrap items-center gap-1">
               <span>&copy; {new Date().getFullYear()}</span>
-              <span className="font-medium">RudraTrader.shop</span>
+              <span className="font-medium">RudraTrader.in</span>
               <span>- All rights reserved.</span>
             </div>
           </div>
@@ -159,10 +159,10 @@ const Footer = () => {
               <div className="flex items-start gap-3 text-[#FAF7F3]">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <a
-                  href="mailto:contact@rudratrader.shop"
+                  href="mailto:contact@rudratrader.in"
                   className="hover:text-white transition-colors duration-200 break-words leading-relaxed"
                 >
-                  contact@rudratrader.shop
+                  contact@rudratrader.in
                 </a>
               </div>
             </div>
@@ -171,7 +171,7 @@ const Footer = () => {
           <div className="text-left text-sm text-[#FAF7F3]">
             <div className="flex items-center gap-1 flex-wrap">
               <span>&copy; {new Date().getFullYear()}</span>
-              <span className="font-medium">RudraTrader.shop</span>
+              <span className="font-medium">RudraTrader.in</span>
               <span>- All rights reserved.</span>
             </div>
           </div>

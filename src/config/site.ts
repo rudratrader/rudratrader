@@ -6,11 +6,11 @@ import { EnhancedProduct } from '@/config/types';
  */
 export const SITE = {
   name: 'Rudra Trader',
-  baseUrl: 'https://rudratrader.shop',
+  baseUrl: 'https://rudratrader.in',
   description:
     'Shop premium agarbatti, dhoop sticks and incense from trusted brands at Rudra Trader, Hyderabad — quality fragrances for pooja and everyday calm.',
   phone: '+919885156895',
-  email: 'contact@rudratrader.shop',
+  email: 'contact@rudratrader.in',
   address: {
     street: '11-3-934/1/1, 1st Floor, New Mallepally, Opp Priya Theater',
     locality: 'Hyderabad',
